@@ -10,14 +10,18 @@ enum AppStoreScreenshotData {
         ProcessInfo.processInfo.arguments.contains(launchArgument)
     }
 
+    #if os(iOS)
     static func configure(_ settingsStore: SettingsStore) {
         settingsStore.settingsViewModel.displayStatsAsList = false
         settingsStore.settingsViewModel.displayAllPiholes = true
         settingsStore.settingsViewModel.disablePermanently = false
         settingsStore.settingsViewModel.temperatureScale = .celsius
     }
+    #endif
 
-    static func makeListUpdater() -> PiholeListUpdater {
+    /// - Parameter service: Optional stand-in service for on-demand calls
+    ///   (blocklists, domains). Defaults to the real API client.
+    static func makeListUpdater(service: ((Pihole) -> PiholeService)? = nil) -> PiholeListUpdater {
         let home = Pihole(
             name: "Home Network",
             address: "home.pi",
@@ -29,7 +33,9 @@ enum AppStoreScreenshotData {
             systemMetricsEnabled: true
         )
 
-        let listUpdater = PiholeListUpdater([home, studio])
+        let listUpdater = PiholeListUpdater(dataUpdaters: [home, studio].map {
+            PiholeSummaryDataUpdater(pihole: $0, service: service?($0))
+        })
         applyHomeData(to: listUpdater.dataUpdaters[0].summary)
         applyStudioData(to: listUpdater.dataUpdaters[1].summary)
         return listUpdater

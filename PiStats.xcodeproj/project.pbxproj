@@ -129,7 +129,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Alerting/IOSMonitoringScheduler.swift,
-				AppStoreScreenshotData.swift,
 				Assets.xcassets,
 				ContentView.swift,
 				iOSApp.swift,
@@ -176,6 +175,7 @@
 				PiholeDataManager.swift,
 				Popover/PopoverView.swift,
 				"Preview Content/Preview Assets.xcassets",
+				Screenshots/MacScreenshotStage.swift,
 				Views/AboutView.swift,
 				Views/ActionButtonView.swift,
 				Views/EmptyStateView.swift,
@@ -212,6 +212,7 @@
 				Alerting/NotificationActionHandler.swift,
 				AppConstants.swift,
 				AppGroup.swift,
+				AppStoreScreenshotData.swift,
 				Colors.xcassets,
 				DataUpdater/PiholeConnectionState.swift,
 				DataUpdater/PiholeConfigurationChangeScope.swift,
@@ -262,6 +263,7 @@
 				Alerting/NotificationActionHandler.swift,
 				AppConstants.swift,
 				AppGroup.swift,
+				AppStoreScreenshotData.swift,
 				Colors.xcassets,
 				DataUpdater/PiholeConnectionState.swift,
 				DataUpdater/PiholeConfigurationChangeScope.swift,

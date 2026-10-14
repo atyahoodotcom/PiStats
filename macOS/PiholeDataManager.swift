@@ -84,6 +84,13 @@ class PiholeDataManager: ObservableObject {
     }
     
     private func loadPiholes() {
+        #if DEBUG
+        if AppStoreScreenshotData.isEnabled {
+            listUpdater = MacScreenshotStage.makeListUpdater()
+            return
+        }
+        #endif
+
         let storage = DefaultPiholeStorage()
         let piholes = storage.restoreAllPiholes()
         
@@ -96,6 +103,10 @@ class PiholeDataManager: ObservableObject {
     
     func startUpdating() {
         guard !isUpdating else { return }
+        #if DEBUG
+        // Screenshot mode shows canned data; never hit the network.
+        if AppStoreScreenshotData.isEnabled { return }
+        #endif
         isUpdating = true
         listUpdater?.startUpdating()
         monitoringScheduler.start()

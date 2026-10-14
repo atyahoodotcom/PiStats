@@ -26,6 +26,9 @@ struct macOSApp: App {
                 .task {
                     dataManager.startUpdating()
                 }
+                #if DEBUG
+                .modifier(MacScreenshotStageModifier(dataManager: dataManager))
+                #endif
         }
         .menuBarExtraStyle(.window)
 

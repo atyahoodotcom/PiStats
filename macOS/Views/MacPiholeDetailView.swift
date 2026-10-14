@@ -33,6 +33,11 @@ struct MacPiholeDetailWindow: View {
             }
         }
         .frame(minWidth: 680, idealWidth: 860, minHeight: 460, idealHeight: 620)
+        #if DEBUG
+        .background {
+            if MacScreenshotStage.scene != nil { MacScreenshotWindowReader() }
+        }
+        #endif
     }
 
     private func resolveUpdater(in listUpdater: PiholeListUpdater) -> PiholeSummaryDataUpdater? {
@@ -108,6 +113,11 @@ struct MacPiholeDetailView: View {
                 .navigationTitle(selection.title)
         }
         .navigationSubtitle(summary.name)
+        #if DEBUG
+        .onAppear {
+            if let pane = MacScreenshotStage.scene?.pane { selection = pane }
+        }
+        #endif
         .toolbar { toolbarContent }
         .domainActionToast($toast)
         .alert("Couldn't update list", isPresented: Binding(get: { actionError != nil }, set: { if !$0 { actionError = nil } })) {
