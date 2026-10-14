@@ -29,44 +29,76 @@ struct BlockServicesView: View {
     }
 
     var body: some View {
-        Group {
-            if isLoading && !hasLoaded {
-                HStack {
-                    ProgressView()
-                        #if os(macOS)
-                        .controlSize(.small)
-                        #endif
-                    Text("Loading…")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-            } else if let errorMessage {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(errorMessage)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Button("Retry") { Task { await reload() } }
-                }
-            } else {
-                VStack(spacing: 10) {
-                    ForEach(BlockableService.catalog) { service in
-                        Toggle(isOn: binding(for: service)) {
-                            Label(service.name, systemImage: service.systemImage)
-                                .font(.subheadline)
-                        }
-                        #if os(macOS)
-                        .toggleStyle(.switch)
-                        #endif
-                    }
-                }
+        content
+            .piholeConfigurationSyncDialog(
+                pendingChange: $pendingChange,
+                options: syncOptions,
+                perform: perform
+            )
+            .task { await reload() }
+    }
+
+    /// iOS embeds this in a detail card; macOS shows it as a full grouped
+    /// form pane with one row per service.
+    @ViewBuilder
+    private var content: some View {
+        #if os(macOS)
+        Form {
+            Section {
+                stateContent
+            } footer: {
+                Text("Blocking a service adds regex deny rules for its domains.")
+                    .foregroundStyle(.secondary)
             }
         }
-        .piholeConfigurationSyncDialog(
-            pendingChange: $pendingChange,
-            options: syncOptions,
-            perform: perform
-        )
-        .task { await reload() }
+        .formStyle(.grouped)
+        #else
+        stateContent
+        #endif
+    }
+
+    @ViewBuilder
+    private var stateContent: some View {
+        if isLoading && !hasLoaded {
+            HStack {
+                ProgressView()
+                    #if os(macOS)
+                    .controlSize(.small)
+                    #endif
+                Text("Loading…")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        } else if let errorMessage {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(errorMessage)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Button("Retry") { Task { await reload() } }
+            }
+        } else {
+            #if os(macOS)
+            serviceToggles
+            #else
+            VStack(spacing: 10) {
+                serviceToggles
+            }
+            #endif
+        }
+    }
+
+    private var serviceToggles: some View {
+        ForEach(BlockableService.catalog) { service in
+            Toggle(isOn: binding(for: service)) {
+                Label(service.name, systemImage: service.systemImage)
+                    #if os(iOS)
+                    .font(.subheadline)
+                    #endif
+            }
+            #if os(macOS)
+            .toggleStyle(.switch)
+            #endif
+        }
     }
 
     private func binding(for service: BlockableService) -> Binding<Bool> {

@@ -32,6 +32,7 @@ struct macOSApp: App {
         WindowGroup(id: AppIdentifiers.detailWindowSceneId, for: UUID.self) { piholeID in
             MacPiholeDetailWindow(dataManager: dataManager, prefs: prefs, piholeID: piholeID.wrappedValue)
         }
+        .defaultSize(width: 880, height: 640)
 
         WindowGroup(UserText.MenuBar.appName, id: AppIdentifiers.mainWindowSceneId) {
             MacMainView(prefs: prefs, dataManager: dataManager)

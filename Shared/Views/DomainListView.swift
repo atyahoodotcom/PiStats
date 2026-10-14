@@ -45,16 +45,14 @@ struct DomainListView: View {
     }
 
     var body: some View {
-        List {
+        PlatformGroupedList {
+            #if os(iOS)
             Section {
-                Picker("", selection: $selectedType) {
-                    Text(UserText.allowDomainAction).tag(DomainListType.allow)
-                    Text(UserText.blockDomainAction).tag(DomainListType.deny)
-                }
-                .pickerStyle(.segmented)
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
+                typePicker
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
             }
+            #endif
 
             if let errorMessage {
                 Section {
@@ -76,6 +74,11 @@ struct DomainListView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .toolbar {
+            #if os(macOS)
+            ToolbarItem(placement: .principal) {
+                typePicker
+            }
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     showingAdd = true
@@ -96,6 +99,15 @@ struct DomainListView: View {
         )
         .task { await reload() }
         .refreshable { await reload() }
+    }
+
+    private var typePicker: some View {
+        Picker("", selection: $selectedType) {
+            Text(UserText.allowDomainAction).tag(DomainListType.allow)
+            Text(UserText.blockDomainAction).tag(DomainListType.deny)
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
     }
 
     @ViewBuilder
@@ -123,6 +135,13 @@ struct DomainListView: View {
                     .toggleStyle(.switch)
                     #endif
                     .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            request(.remove(rule))
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .contextMenu {
                         Button(role: .destructive) {
                             request(.remove(rule))
                         } label: {
@@ -301,6 +320,23 @@ private struct AddDomainSheet: View {
         isSubmitting = true
         onAdd(rule)
         dismiss()
+    }
+}
+
+// MARK: - Grouped List
+
+/// A `List` on iOS; a grouped `Form` on macOS, which renders sections as
+/// inset rounded groups the way System Settings does.
+struct PlatformGroupedList<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        #if os(macOS)
+        Form { content }
+            .formStyle(.grouped)
+        #else
+        List { content }
+        #endif
     }
 }
 

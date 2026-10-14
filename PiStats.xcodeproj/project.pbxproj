@@ -179,6 +179,7 @@
 				Views/AboutView.swift,
 				Views/ActionButtonView.swift,
 				Views/EmptyStateView.swift,
+				Views/MacDetailPanes.swift,
 				Views/MacPiholeDetailView.swift,
 				Views/MenuBarIconView.swift,
 				Views/PiholeRowViews.swift,
@@ -1319,7 +1320,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.bunn.holestats;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1353,7 +1354,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.bunn.holestats;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

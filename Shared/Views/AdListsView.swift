@@ -34,7 +34,7 @@ struct AdListsView: View {
     }
 
     var body: some View {
-        List {
+        PlatformGroupedList {
             if let errorMessage {
                 Section {
                     Text(errorMessage).foregroundStyle(.secondary)

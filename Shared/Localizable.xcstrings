@@ -7,6 +7,9 @@
     "·" : {
 
     },
+    "#" : {
+
+    },
     "%@ %@" : {
       "localizations" : {
         "en" : {
@@ -36,6 +39,9 @@
           }
         }
       }
+    },
+    "^[%lld diagnosis message](inflect: true)" : {
+
     },
     "1 hour" : {
       "localizations" : {
@@ -160,6 +166,9 @@
         }
       }
     },
+    "Activity" : {
+
+    },
     "Add" : {
       "localizations" : {
         "pt-BR" : {
@@ -219,6 +228,9 @@
           }
         }
       }
+    },
+    "Address" : {
+
     },
     "All Pi-holes" : {
       "localizations" : {
@@ -321,6 +333,9 @@
         }
       }
     },
+    "Blocked" : {
+
+    },
     "Blocked %@" : {
       "localizations" : {
         "pt-BR" : {
@@ -330,6 +345,9 @@
           }
         }
       }
+    },
+    "Blocking a service adds regex deny rules for its domains." : {
+
     },
     "Blocking disabled" : {
       "extractionState" : "stale",
@@ -422,6 +440,9 @@
         }
       }
     },
+    "Clear Messages…" : {
+
+    },
     "Click 'Manage' below to add your first Pi-hole" : {
       "localizations" : {
         "pt-BR" : {
@@ -431,6 +452,9 @@
           }
         }
       }
+    },
+    "Client" : {
+
     },
     "Close" : {
       "localizations" : {
@@ -462,6 +486,18 @@
           }
         }
       }
+    },
+    "Copy" : {
+
+    },
+    "Copy Address" : {
+
+    },
+    "Copy Name" : {
+
+    },
+    "Core" : {
+
     },
     "Couldn't Load Queries" : {
 
@@ -545,6 +581,9 @@
           }
         }
       }
+    },
+    "Diagnosis Messages" : {
+
     },
     "Diagnostic messages" : {
       "extractionState" : "stale",
@@ -646,6 +685,9 @@
           }
         }
       }
+    },
+    "Domain" : {
+
     },
     "Domain or regex" : {
       "localizations" : {
@@ -763,6 +805,9 @@
         }
       }
     },
+    "FTL" : {
+
+    },
     "Get started by adding your first Pi-hole:" : {
       "localizations" : {
         "pt-BR" : {
@@ -836,6 +881,9 @@
     "iOS" : {
 
     },
+    "Kernel" : {
+
+    },
     "Last 24 Hours" : {
       "localizations" : {
         "pt-BR" : {
@@ -866,6 +914,9 @@
           }
         }
       }
+    },
+    "Load Average" : {
+
     },
     "Loading…" : {
       "localizations" : {
@@ -920,6 +971,9 @@
         }
       }
     },
+    "Memory" : {
+
+    },
     "Monitor your Pi-hole instances" : {
       "localizations" : {
         "pt-BR" : {
@@ -939,6 +993,12 @@
           }
         }
       }
+    },
+    "Most Active" : {
+
+    },
+    "Most Blocked" : {
+
     },
     "Needs Attention" : {
       "localizations" : {
@@ -960,6 +1020,9 @@
         }
       }
     },
+    "No Clients" : {
+
+    },
     "No data available" : {
       "localizations" : {
         "pt-BR" : {
@@ -969,6 +1032,9 @@
           }
         }
       }
+    },
+    "No Domains" : {
+
     },
     "No Pi-holes configured" : {
       "localizations" : {
@@ -1030,6 +1096,16 @@
         }
       }
     },
+    "Only This Pi-hole" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Somente este Pi-hole"
+          }
+        }
+      }
+    },
     "Optional friendly name" : {
       "localizations" : {
         "pt-BR" : {
@@ -1039,6 +1115,9 @@
           }
         }
       }
+    },
+    "Overview" : {
+
     },
     "Partially Active" : {
       "localizations" : {
@@ -1060,6 +1139,9 @@
         }
       }
     },
+    "Pause blocking" : {
+
+    },
     "Percent Blocked" : {
       "localizations" : {
         "pt-BR" : {
@@ -1079,6 +1161,9 @@
           }
         }
       }
+    },
+    "Permitted" : {
+
     },
     "Pi Stats" : {
 
@@ -1187,16 +1272,6 @@
         }
       }
     },
-    "Only This Pi-hole" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Somente este Pi-hole"
-          }
-        }
-      }
-    },
     "Port" : {
       "localizations" : {
         "pt-BR" : {
@@ -1300,6 +1375,12 @@
         }
       }
     },
+    "Refresh" : {
+
+    },
+    "Refresh now" : {
+
+    },
     "Regex" : {
       "localizations" : {
         "pt-BR" : {
@@ -1319,6 +1400,9 @@
           }
         }
       }
+    },
+    "Resume blocking" : {
+
     },
     "Retry" : {
       "localizations" : {
@@ -1380,6 +1464,9 @@
         }
       }
     },
+    "Show" : {
+
+    },
     "Show History Chart" : {
       "localizations" : {
         "pt-BR" : {
@@ -1399,6 +1486,9 @@
           }
         }
       }
+    },
+    "Show Messages" : {
+
     },
     "Show Pi Stats" : {
       "localizations" : {
@@ -1460,6 +1550,9 @@
         }
       }
     },
+    "Software" : {
+
+    },
     "Start Pi Stats when macOS begins" : {
       "localizations" : {
         "pt-BR" : {
@@ -1500,6 +1593,12 @@
         }
       }
     },
+    "System" : {
+
+    },
+    "System load average over 1, 5, and 15 minutes" : {
+
+    },
     "System Metrics" : {
       "localizations" : {
         "pt-BR" : {
@@ -1530,6 +1629,9 @@
         }
       }
     },
+    "Technical Details" : {
+
+    },
     "Technical Details:" : {
       "localizations" : {
         "pt-BR" : {
@@ -1539,6 +1641,9 @@
           }
         }
       }
+    },
+    "Temperature" : {
+
     },
     "Temperature Scale" : {
       "localizations" : {
@@ -1646,16 +1751,6 @@
     "Type" : {
 
     },
-    "Unknown" : {
-      "localizations" : {
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desconhecido"
-          }
-        }
-      }
-    },
     "Unavailable" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1663,6 +1758,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Indisponível"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconhecido"
           }
         }
       }
@@ -1690,6 +1795,9 @@
     "Update Gravity" : {
 
     },
+    "Updated %@" : {
+
+    },
     "Updating" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1713,6 +1821,9 @@
           }
         }
       }
+    },
+    "Uptime" : {
+
     },
     "Use your Pi-hole web interface password" : {
       "localizations" : {
@@ -1743,6 +1854,9 @@
           }
         }
       }
+    },
+    "Web Interface" : {
+
     },
     "Website" : {
       "localizations" : {
