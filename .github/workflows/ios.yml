@@ -21,7 +21,7 @@ jobs:
           mkdir -p logs
           xcodebuild build \
             -project PiStats.xcodeproj \
-            -scheme "Pi Stats Mobile" \
+            -scheme "iOS" \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
