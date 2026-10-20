@@ -14,16 +14,29 @@ jobs:
           xcodebuild -version
           xcodebuild -list -project PiStats.xcodeproj
 
+      - name: Remove Watch app from iPhone target (CI copy only)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          p = 'PiStats.xcodeproj/project.pbxproj'
+          s = open(p).read()
+          dep = "\t\t\t\t3196111A301362D6009205E5 /* PBXTargetDependency */,\n"
+          emb = "\t\t\t\t3196111C301362D6009205E5 /* Embed Watch Content */,\n"
+          if s.count(dep) == 1 and s.count(emb) == 1:
+              open(p, 'w').write(s.replace(dep, '').replace(emb, ''))
+              print("Watch app removed from iPhone target")
+          else:
+              print("Patch pattern not found, building unpatched")
+          PY
+
       - name: Build (unsigned)
         shell: bash
         run: |
-          set -o pipefail
           mkdir -p logs
-          xcodebuild build \
+          if ! xcodebuild build \
             -project PiStats.xcodeproj \
             -scheme "iOS" \
             -configuration Release \
-            -sdk iphoneos \
             -destination 'generic/platform=iOS' \
             -derivedDataPath build \
             -skipMacroValidation \
@@ -31,7 +44,12 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            2>&1 | tee logs/build.log | tail -n 40
+            > logs/build.log 2>&1; then
+            echo "BUILD FAILED. Error lines:"
+            grep -n -E "error:" logs/build.log | head -n 30 || true
+            exit 1
+          fi
+          tail -n 5 logs/build.log
 
       - name: Package IPA
         shell: bash
