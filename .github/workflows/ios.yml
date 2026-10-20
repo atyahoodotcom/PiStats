@@ -1,0 +1,46 @@
+name: Build unsigned IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode and schemes
+        run: |
+          xcodebuild -version
+          xcodebuild -list -project PiStats.xcodeproj
+
+      - name: Build (unsigned)
+        env:
+          SCHEME: "PiStats iOS"   # change to match the -list output
+        run: |
+          xcodebuild build \
+            -project PiStats.xcodeproj \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            -skipMacroValidation \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            | tail -n 50
+
+      - name: Package IPA
+        run: |
+          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
+          echo "Found: $APP"
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -qry PiStats-unsigned.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PiStats-unsigned-ipa
+          path: PiStats-unsigned.ipa
