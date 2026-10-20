@@ -16,28 +16,12 @@ jobs:
 
       - name: Build (unsigned)
         shell: bash
-        env:
-          # Leave empty to auto-detect, or set the exact scheme name
-          SCHEME: ""
         run: |
           set -o pipefail
-
-          SCHEME_NAME="$SCHEME"
-          if [ -z "$SCHEME_NAME" ]; then
-            SCHEME_NAME=$(xcodebuild -list -json -project PiStats.xcodeproj 2>/dev/null | python3 -c "
-          import json, sys
-          schemes = json.load(sys.stdin)['project']['schemes']
-          bad = ('watch', 'widget', 'mac', 'test')
-          good = [s for s in schemes if 'ios' in s.lower() and not any(b in s.lower() for b in bad)]
-          rest = [s for s in schemes if not any(b in s.lower() for b in bad)]
-          print((good or rest or schemes)[0])
-          ")
-          fi
-          echo "Using scheme: $SCHEME_NAME"
-
+          mkdir -p logs
           xcodebuild build \
             -project PiStats.xcodeproj \
-            -scheme "$SCHEME_NAME" \
+            -scheme "Pi Stats Mobile" \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
@@ -47,26 +31,40 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            2>&1 | tee build.log | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
-
-          test -d build/Build/Products/Release-iphoneos
+            2>&1 | tee logs/build.log | tail -n 40
 
       - name: Package IPA
+        shell: bash
         run: |
-          APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
-          echo "Found: $APP"
-          test -n "$APP"
+          APP="build/Build/Products/Release-iphoneos/Pi Stats Mobile.app"
+          echo "--- Products ---"
+          find build/Build/Products -maxdepth 2 | sort
+          test -d "$APP" || { echo "App not found"; exit 1; }
+
+          EXE=$(/usr/libexec/PlistBuddy -c "Print :CFBundleExecutable" "$APP/Info.plist")
+          PLAT=$(/usr/libexec/PlistBuddy -c "Print :DTPlatformName" "$APP/Info.plist")
+          BID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP/Info.plist")
+          echo "executable=$EXE platform=$PLAT id=$BID"
+          test "$PLAT" = "iphoneos"
+          test -f "$APP/$EXE"
+
+          rm -rf Payload PiStatsMobile-unsigned.ipa
           mkdir Payload
           cp -R "$APP" Payload/
-          zip -qry PiStats-unsigned.ipa Payload
+          zip -qry PiStatsMobile-unsigned.ipa Payload
+
+          ls -lh PiStatsMobile-unsigned.ipa
+          SIZE=$(stat -f%z PiStatsMobile-unsigned.ipa)
+          echo "IPA size: $SIZE bytes"
+          test "$SIZE" -gt 1000000
 
       - uses: actions/upload-artifact@v6
         with:
-          name: PiStats-unsigned-ipa
-          path: PiStats-unsigned.ipa
+          name: PiStatsMobile-unsigned-ipa
+          path: PiStatsMobile-unsigned.ipa
 
       - uses: actions/upload-artifact@v6
-        if: failure()
+        if: always()
         with:
-          name: build-log
-          path: build.log
+          name: build-logs
+          path: logs
