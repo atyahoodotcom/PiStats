@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Show Xcode and schemes
         run: |
@@ -15,12 +15,29 @@ jobs:
           xcodebuild -list -project PiStats.xcodeproj
 
       - name: Build (unsigned)
+        shell: bash
         env:
-          SCHEME: "PiStats iOS"   # change to match the -list output
+          # Leave empty to auto-detect, or set the exact scheme name
+          SCHEME: ""
         run: |
+          set -o pipefail
+
+          SCHEME_NAME="$SCHEME"
+          if [ -z "$SCHEME_NAME" ]; then
+            SCHEME_NAME=$(xcodebuild -list -json -project PiStats.xcodeproj 2>/dev/null | python3 -c "
+          import json, sys
+          schemes = json.load(sys.stdin)['project']['schemes']
+          bad = ('watch', 'widget', 'mac', 'test')
+          good = [s for s in schemes if 'ios' in s.lower() and not any(b in s.lower() for b in bad)]
+          rest = [s for s in schemes if not any(b in s.lower() for b in bad)]
+          print((good or rest or schemes)[0])
+          ")
+          fi
+          echo "Using scheme: $SCHEME_NAME"
+
           xcodebuild build \
             -project PiStats.xcodeproj \
-            -scheme "$SCHEME" \
+            -scheme "$SCHEME_NAME" \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
@@ -30,17 +47,26 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            | tail -n 50
+            2>&1 | tee build.log | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
+
+          test -d build/Build/Products/Release-iphoneos
 
       - name: Package IPA
         run: |
           APP=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" | head -n 1)
           echo "Found: $APP"
+          test -n "$APP"
           mkdir Payload
           cp -R "$APP" Payload/
           zip -qry PiStats-unsigned.ipa Payload
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: PiStats-unsigned-ipa
           path: PiStats-unsigned.ipa
+
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: build-log
+          path: build.log
